@@ -138,33 +138,33 @@ clinica_biolagos/
 ## Validación de Requisitos Técnicos (Cumplimiento de Rúbrica LPOO2 Ev3)
 El diseño y desarrollo del proyecto Clínica BioLagos cumple de manera estricta con la totalidad de los criterios e indicadores de la rúbrica de evaluación:
 
-- 1. Requisitos de Estructura y Modelos
+1. Requisitos de Estructura y Modelos
 Proyecto Django con Aplicaciones: Organización arquitectónica impecable basada en la separación de responsabilidades mediante las apps clinica_app y core.
 
 Modelos y Relaciones Avanzadas: Supera el requerimiento mínimo al implementar 5 modelos de datos interconectados en clinica_app/models.py: Especialidad, Medico, Paciente, Cita y BloqueHorario, vinculados de forma lógica mediante relaciones ForeignKey.
 
 Arquitectura MVT: Adhesión rigurosa al estándar de diseño de Django (Modelos, Vistas y Plantillas).
 
-- 2. Autenticación y Áreas de Acceso
+2. Autenticación y Áreas de Acceso
 Sistema de Autenticación Integrado: Autenticación de usuarios resuelta mediante el subsistema nativo de Django. Control dinámico en la barra de navegación (base.html) utilizando directrices Jinja ({% if user.is_authenticated %}).
 
 Vistas Públicas Orientadas al Usuario: Disponibilidad de páginas informativas abiertas y acceso libre al formulario crítico de solicitar_hora.
 
 Área Privada con Control de Roles: Seguridad reforzada mediante interceptores @login_required y lógica centralizada en access.py (ej. can_access_paciente, can_access_cita), restringiendo el acceso a datos sensibles según el rol o la propiedad de la cita.
 
-- 3. Persistencia y Manipulación de Datos
+3. Persistencia y Manipulación de Datos
 Flujo de Datos y Migraciones: Migraciones debidamente estructuradas y base de datos persistente basada en SQLite.
 
 CRUD Independiente del Panel Administrador: Cumplimiento estricto del requerimiento de desarrollo de flujos. Todo el ciclo de creación, lectura, actualización y borrado (CRUD) se realiza a través de formularios personalizados (PacienteForm, CitaForm, MedicoForm, BloqueHorarioForm) embebidos en la interfaz de usuario web, dejando el /admin/ exclusivamente para tareas operativas de bajo nivel.
 
-- 4. Validaciones y Errores
+4. Validaciones y Errores
 Filtros en Backend: Algoritmo de validación de RUT chileno implementando la lógica de verificación por Módulo 11 en las capas de modelos y formularios. Control activo de solapamiento de agendas para evitar colisiones en los bloques horarios.
 
 Filtros en Frontend: Formularios web optimizados mediante controles interactivos de Bootstrap 5 y restricciones semánticas HTML5 (type="date", type="time").
 
 Feedback y Mensajería Activa: Integración nativa del framework de mensajería de Django (messages.success, messages.error), brindando notificaciones en tiempo real al usuario ante operaciones exitosas o fallidas.
 
-- 5. Interfaz de Usuario (UI/UX)
+5. Interfaz de Usuario (UI/UX)
 Maquetación y Estética Profesional: Diseño implementado en base.html con Bootstrap 5, tipografía estilizada vía Google Fonts e iconografía moderna. El dashboard incorpora componentes visuales dinámicos de analítica corporativa (stat-card) y consumo asíncrono de endpoints mediante la API JSON local de horas_disponibles_json.
 
 ## Mejoras Futuras
