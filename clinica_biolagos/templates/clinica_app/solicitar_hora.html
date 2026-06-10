@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% block title %}Solicitar Hora – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-calendar-plus me-3"></i>Solicitar Hora</h1>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white-50">Inicio</a></li>
+      <li class="breadcrumb-item active text-white">Solicitar Hora</li>
+    </ol></nav>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-bio p-4 p-md-5">
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="post" id="solicitud-form" novalidate>
+          {% csrf_token %}
+          <div class="row g-3">
+
+            {# ── Datos personales ── #}
+            <div class="col-12">
+              <h6 class="fw-600 mb-0" style="color:var(--bio-primary);">
+                <i class="bi bi-person me-2"></i>Datos del Paciente
+              </h6>
+              <hr class="mt-1">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-500">Nombre *</label>
+              {{ form.nombre }}
+              {% if form.nombre.errors %}<div class="text-danger small mt-1">{{ form.nombre.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">Apellido *</label>
+              {{ form.apellido }}
+              {% if form.apellido.errors %}<div class="text-danger small mt-1">{{ form.apellido.errors }}</div>{% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-500">RUT *</label>
+              {{ form.rut }}
+              <div id="rut-feedback" class="small mt-1" aria-live="polite"></div>
+              {% if form.rut.errors %}<div class="text-danger small mt-1">{{ form.rut.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-500">Email *</label>
+              {{ form.email }}
+              {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-500">Teléfono *</label>
+              {{ form.telefono }}
+              {% if form.telefono.errors %}<div class="text-danger small mt-1">{{ form.telefono.errors }}</div>{% endif %}
+            </div>
+
+            {# ── Datos de la cita ── #}
+            <div class="col-12 mt-2">
+              <h6 class="fw-600 mb-0" style="color:var(--bio-primary);">
+                <i class="bi bi-calendar2-heart me-2"></i>Datos de la Cita
+              </h6>
+              <hr class="mt-1">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-500">Médico *</label>
+              {{ form.medico }}
+              {% if form.medico.errors %}<div class="text-danger small mt-1">{{ form.medico.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">Fecha *</label>
+              {{ form.fecha }}
+              {% if form.fecha.errors %}<div class="text-danger small mt-1">{{ form.fecha.errors }}</div>{% endif %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-500">Hora disponible *</label>
+              <div id="hora-container">
+                {{ form.hora }}
+              </div>
+              <div id="hora-estado" class="small mt-1 text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                Seleccione un médico y una fecha para ver las horas disponibles.
+              </div>
+              {% if form.hora.errors %}<div class="text-danger small mt-1">{{ form.hora.errors }}</div>{% endif %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-500">Motivo de la consulta *</label>
+              {{ form.motivo }}
+              {% if form.motivo.errors %}<div class="text-danger small mt-1">{{ form.motivo.errors }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-500">Notas adicionales</label>
+              {{ form.notas }}
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between gap-2 mt-4 pt-2">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+              <i class="bi bi-arrow-left me-2"></i>Cancelar
+            </a>
+            <button type="submit" id="btn-submit" class="btn btn-bio-primary px-5">
+              <i class="bi bi-calendar-check me-2"></i>Enviar Solicitud
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────────────────
+   Validación RUT Módulo 11 (lado cliente — misma lógica que el servidor)
+───────────────────────────────────────────────────────────────────────────── */
+function validarRutCL(rut) {
+  rut = rut.trim().toUpperCase().replace(/\./g, '').replace(/-/g, '');
+  if (rut.length < 2) return { ok: false, msg: 'RUT demasiado corto.' };
+  const cuerpo = rut.slice(0, -1);
+  const dv     = rut.slice(-1);
+  if (!/^\d+$/.test(cuerpo)) return { ok: false, msg: 'El cuerpo del RUT debe ser numérico.' };
+  let suma = 0, factor = 2;
+  for (let i = cuerpo.length - 1; i >= 0; i--) {
+    suma += parseInt(cuerpo[i]) * factor;
+    factor = factor === 7 ? 2 : factor + 1;
+  }
+  const resto = 11 - (suma % 11);
+  const dvEsp = resto === 11 ? '0' : resto === 10 ? 'K' : String(resto);
+  if (dv !== dvEsp) return { ok: false, msg: `Dígito verificador incorrecto (esperado: ${dvEsp}).` };
+  return { ok: true, msg: 'RUT válido ✓' };
+}
+
+const rutInput   = document.getElementById('id_rut');
+const rutFeedbk  = document.getElementById('rut-feedback');
+if (rutInput) {
+  rutInput.addEventListener('blur', () => {
+    if (!rutInput.value.trim()) { rutFeedbk.textContent = ''; return; }
+    const r = validarRutCL(rutInput.value);
+    rutFeedbk.textContent  = r.msg;
+    rutFeedbk.className    = `small mt-1 fw-500 ${r.ok ? 'text-success' : 'text-danger'}`;
+  });
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Carga dinámica de horas disponibles vía AJAX
+   Endpoint: GET /clinica/api/horas-disponibles/?medico=<id>&fecha=<YYYY-MM-DD>
+───────────────────────────────────────────────────────────────────────────── */
+const medicoSel  = document.getElementById('id_medico');
+const fechaInp   = document.getElementById('id_fecha');
+const horaSelect = document.getElementById('id_hora');
+const horaEstado = document.getElementById('hora-estado');
+
+function setHoraEstado(msg, cls) {
+  horaEstado.innerHTML = `<i class="bi bi-${cls === 'text-success' ? 'check-circle' : cls === 'text-warning' ? 'exclamation-circle' : 'info-circle'} me-1"></i>${msg}`;
+  horaEstado.className = `small mt-1 ${cls}`;
+}
+
+function poblarHoras(horas, horaPrevia) {
+  horaSelect.innerHTML = '';
+  if (!horas || horas.length === 0) {
+    horaSelect.innerHTML = '<option value="">— Sin horas disponibles —</option>';
+    horaSelect.disabled  = true;
+    return;
+  }
+  horaSelect.disabled = false;
+  const ph = new Option('— Seleccione una hora —', '');
+  horaSelect.appendChild(ph);
+  horas.forEach(h => {
+    const opt = new Option(h, h);
+    if (h === horaPrevia) opt.selected = true;
+    horaSelect.appendChild(opt);
+  });
+}
+
+function cargarHoras() {
+  const medicoId = medicoSel ? medicoSel.value : '';
+  const fecha    = fechaInp  ? fechaInp.value  : '';
+  if (!medicoId || !fecha) {
+    setHoraEstado('Seleccione un médico y una fecha para ver las horas disponibles.', 'text-muted');
+    poblarHoras([]);
+    return;
+  }
+  setHoraEstado('Consultando horas disponibles…', 'text-muted');
+  const url = `{% url 'clinica:horas_disponibles_json' %}?medico=${medicoId}&fecha=${fecha}`;
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        setHoraEstado('Error: ' + data.error, 'text-danger');
+        poblarHoras([]);
+        return;
+      }
+      const horas = data.horas || [];
+      if (horas.length === 0) {
+        setHoraEstado('No hay horas disponibles para ese médico en esa fecha.', 'text-warning');
+      } else {
+        setHoraEstado(`${horas.length} hora(s) disponible(s).`, 'text-success');
+      }
+      // Mantener selección previa si sigue válida (útil al recargar tras error)
+      const prev = horaSelect.value;
+      poblarHoras(horas, prev);
+    })
+    .catch(() => {
+      setHoraEstado('No se pudo obtener las horas disponibles.', 'text-danger');
+      poblarHoras([]);
+    });
+}
+
+if (medicoSel) medicoSel.addEventListener('change', cargarHoras);
+if (fechaInp)  fechaInp.addEventListener('change',  cargarHoras);
+
+// Si la página se recargó con valores ya seleccionados (error de validación), recargar horas
+if (medicoSel && medicoSel.value && fechaInp && fechaInp.value) {
+  cargarHoras();
+}
+</script>
+{% endblock %}

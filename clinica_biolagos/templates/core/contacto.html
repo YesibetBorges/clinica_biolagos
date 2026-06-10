@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Contacto – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-envelope me-3"></i>Contacto</h1>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white-50">Inicio</a></li><li class="breadcrumb-item active text-white">Contacto</li></ol></nav>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5">
+    <div class="col-lg-5">
+      <h3 style="font-family:'Playfair Display',serif;color:#06323b;margin-bottom:1.5rem;">Estamos aquí para ayudarte</h3>
+      <div class="card card-bio p-4 mb-3">
+        <div class="d-flex gap-3 align-items-start">
+          <i class="bi bi-geo-alt-fill" style="font-size:1.4rem;color:#0e8a9e;flex-shrink:0;margin-top:.15rem;"></i>
+          <div><strong style="color:#06323b;">Dirección</strong><br><span class="text-muted">Av. Costanera 1234, Concepción, Región del Biobio</span></div>
+        </div>
+      </div>
+      <div class="card card-bio p-4 mb-3">
+        <div class="d-flex gap-3 align-items-start">
+          <i class="bi bi-telephone-fill" style="font-size:1.4rem;color:#0e8a9e;flex-shrink:0;margin-top:.15rem;"></i>
+          <div><strong style="color:#06323b;">Teléfonos</strong><br><span class="text-muted">Central: +56 65 234 5678<br>Urgencias: +56 9 8765 4321</span></div>
+        </div>
+      </div>
+      <div class="card card-bio p-4 mb-3">
+        <div class="d-flex gap-3 align-items-start">
+          <i class="bi bi-envelope-fill" style="font-size:1.4rem;color:#0e8a9e;flex-shrink:0;margin-top:.15rem;"></i>
+          <div><strong style="color:#06323b;">Correo</strong><br><span class="text-muted">contacto@clinicabiolagos.cl</span></div>
+        </div>
+      </div>
+      <div class="card card-bio p-4">
+        <div class="d-flex gap-3 align-items-start">
+          <i class="bi bi-clock-fill" style="font-size:1.4rem;color:#0e8a9e;flex-shrink:0;margin-top:.15rem;"></i>
+          <div><strong style="color:#06323b;">Horario</strong><br><span class="text-muted">Lunes a Viernes: 08:00 – 20:00<br>Sábados: 09:00 – 14:00<br>Urgencias: 24/7</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card card-bio p-4 p-md-5">
+        <h4 style="color:#06323b;font-weight:600;margin-bottom:1.5rem;"><i class="bi bi-send me-2" style="color:#0e8a9e;"></i>Envíanos un Mensaje</h4>
+        <form method="post">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-500">Nombre completo *</label>
+              <input type="text" class="form-control" name="nombre" required placeholder="Tu nombre">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">Correo electrónico *</label>
+              <input type="email" class="form-control" name="email" required placeholder="tu@correo.cl">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">Teléfono</label>
+              <input type="tel" class="form-control" name="telefono" placeholder="+56 9 1234 5678">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">Asunto</label>
+              <select class="form-select" name="asunto">
+                <option>Solicitud de hora</option>
+                <option>Consulta de servicios</option>
+                <option>Convenios y precios</option>
+                <option>Resultados de exámenes</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-500">Mensaje *</label>
+              <textarea class="form-control" name="mensaje" rows="5" required placeholder="¿En qué podemos ayudarte?"></textarea>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="acepta" required>
+                <label class="form-check-label text-muted small" for="acepta">Acepto el tratamiento de mis datos según la política de privacidad.</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-bio-primary px-5 py-2 w-100">
+                <i class="bi bi-send me-2"></i>Enviar Mensaje
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

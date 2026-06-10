@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}{{ paciente.nombre_completo }} – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1><i class="bi bi-person-lines-fill me-3"></i>Ficha del Paciente</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-white-50">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'clinica:paciente_lista' %}" class="text-white-50">Pacientes</a></li>
+          <li class="breadcrumb-item active text-white">{{ paciente.nombre_completo }}</li>
+        </ol></nav>
+      </div>
+      <div class="d-flex gap-2 mt-2">
+        <a href="{% url 'clinica:paciente_editar' paciente.pk %}" class="btn btn-warning"><i class="bi bi-pencil me-1"></i>Editar</a>
+        {% if user.is_superuser %}
+        <a href="{% url 'clinica:paciente_eliminar' paciente.pk %}" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Eliminar</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row g-4">
+    <!-- DATOS PERSONALES -->
+    <div class="col-lg-4">
+      <div class="card card-bio p-4 text-center mb-4">
+        <div style="width:80px;height:80px;background:linear-gradient(135deg,#0a5c6b,#0e8a9e);border-radius:50%;margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;font-weight:700;">
+          {{ paciente.nombre|slice:":1" }}{{ paciente.apellido|slice:":1" }}
+        </div>
+        <h4 style="color:#06323b;font-weight:600;">{{ paciente.nombre_completo }}</h4>
+        <p class="text-muted mb-1">{{ paciente.rut }}</p>
+        <span class="badge bg-light text-dark border">{{ paciente.prevision|default:"Sin previsión" }}</span>
+      </div>
+
+      <div class="card card-bio p-4">
+        <h6 style="color:#0a5c6b;font-weight:600;margin-bottom:1rem;"><i class="bi bi-person me-2"></i>Datos Personales</h6>
+        <div class="mb-2"><small class="text-muted d-block">Fecha de Nacimiento</small><span>{{ paciente.fecha_nacimiento|date:"d/m/Y" }}</span></div>
+        <div class="mb-2"><small class="text-muted d-block">Sexo</small><span>{{ paciente.get_sexo_display }}</span></div>
+        <div class="mb-2"><small class="text-muted d-block">Teléfono</small><span>{{ paciente.telefono|default:"-" }}</span></div>
+        <div class="mb-2"><small class="text-muted d-block">Email</small><span>{{ paciente.email|default:"-" }}</span></div>
+        <div class="mb-2"><small class="text-muted d-block">Dirección</small><span>{{ paciente.direccion|default:"-" }}, {{ paciente.ciudad|default:"" }}</span></div>
+        {% if paciente.alergias %}
+        <div class="mb-2">
+          <small class="text-muted d-block">Alergias</small>
+          <span class="badge bg-danger-subtle text-danger">{{ paciente.alergias }}</span>
+        </div>
+        {% endif %}
+        <div><small class="text-muted d-block">Registrado</small><span>{{ paciente.fecha_registro|date:"d/m/Y H:i" }}</span></div>
+      </div>
+    </div>
+
+    <!-- CITAS -->
+    <div class="col-lg-8">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 style="color:#06323b;font-weight:600;"><i class="bi bi-calendar3 me-2" style="color:#0e8a9e;"></i>Historial de Citas</h5>
+        <a href="{% url 'clinica:cita_crear' %}" class="btn btn-bio-primary btn-sm"><i class="bi bi-calendar-plus me-1"></i>Nueva Cita</a>
+      </div>
+
+      {% if citas %}
+      {% for cita in citas %}
+      <div class="card card-bio p-3 mb-3">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="fw-500" style="color:#06323b;">{{ cita.motivo }}</div>
+            <div class="text-muted small mt-1">
+              <i class="bi bi-person-badge me-1"></i>{{ cita.medico }} &nbsp;
+              <i class="bi bi-calendar3 me-1"></i>{{ cita.fecha|date:"d/m/Y" }} &nbsp;
+              <i class="bi bi-clock me-1"></i>{{ cita.hora|time:"H:i" }}
+            </div>
+            {% if cita.notas %}<div class="text-muted small mt-1"><i class="bi bi-journal-text me-1"></i>{{ cita.notas }}</div>{% endif %}
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge badge-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
+            {% if can_manage_citas %}<a href="{% url 'clinica:cita_editar' cita.pk %}" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="card card-bio p-5 text-center text-muted">
+        <i class="bi bi-calendar-x" style="font-size:2.5rem;"></i>
+        <p class="mt-2">Este paciente no tiene citas registradas.</p>
+        <a href="{% url 'clinica:cita_crear' %}" class="btn btn-bio-primary">Agendar Primera Cita</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

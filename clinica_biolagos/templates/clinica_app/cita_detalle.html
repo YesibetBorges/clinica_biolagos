@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Cita #{{ cita.pk }} – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1><i class="bi bi-calendar-check me-3"></i>Detalle de Cita</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-white-50">Dashboard</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'clinica:cita_lista' %}" class="text-white-50">Citas</a></li>
+          <li class="breadcrumb-item active text-white">Cita #{{ cita.pk }}</li>
+        </ol></nav>
+      </div>
+      <div class="d-flex gap-2 mt-2">
+        {% if can_manage_citas %}
+        <a href="{% url 'clinica:cita_editar' cita.pk %}" class="btn btn-warning"><i class="bi bi-pencil me-1"></i>Editar</a>
+        {% endif %}
+        {% if can_delete_citas %}
+        <a href="{% url 'clinica:cita_eliminar' cita.pk %}" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Eliminar</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card card-bio p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <h4 style="color:#06323b;font-weight:600;font-family:'Playfair Display',serif;">Cita #{{ cita.pk }}</h4>
+          <span class="badge badge-{{ cita.estado }} fs-6">{{ cita.get_estado_display }}</span>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <small class="text-muted d-block fw-500">Paciente</small>
+            <a href="{% url 'clinica:paciente_detalle' cita.paciente.pk %}" class="text-decoration-none" style="color:#0a5c6b;font-weight:600;">{{ cita.paciente.nombre_completo }}</a>
+            <div class="text-muted small">{{ cita.paciente.rut }}</div>
+          </div>
+          <div class="col-md-6">
+            <small class="text-muted d-block fw-500">Médico</small>
+            <div style="font-weight:600;color:#06323b;">{{ cita.medico }}</div>
+            {% if cita.medico.especialidad %}<div class="text-muted small">{{ cita.medico.especialidad }}</div>{% endif %}
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block fw-500">Fecha</small>
+            <div class="fw-500">{{ cita.fecha|date:"d/m/Y" }}</div>
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block fw-500">Hora</small>
+            <div class="fw-500">{{ cita.hora|time:"H:i" }}</div>
+          </div>
+          <div class="col-md-4">
+            <small class="text-muted d-block fw-500">Registrada</small>
+            <div class="fw-500">{{ cita.fecha_creacion|date:"d/m/Y" }}</div>
+          </div>
+          <div class="col-12">
+            <small class="text-muted d-block fw-500">Motivo de la consulta</small>
+            <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;">{{ cita.motivo }}</div>
+          </div>
+          {% if cita.notas %}
+          <div class="col-12">
+            <small class="text-muted d-block fw-500">Notas</small>
+            <div class="p-3 rounded" style="background:#f8fafc;border:1px solid #e2e8f0;">{{ cita.notas }}</div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="mt-4 pt-3 border-top">
+          <a href="{% url 'clinica:cita_lista' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver a Citas
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

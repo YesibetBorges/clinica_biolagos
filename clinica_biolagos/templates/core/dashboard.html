@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-speedometer2 me-3"></i>Dashboard</h1>
+    <p class="mb-0 opacity-75">Bienvenido, {{ user.get_full_name|default:user.username }}. Panel de control de Clínica BioLagos.</p>
+  </div>
+</div>
+
+<div class="container py-4">
+
+  <!-- STAT CARDS: solo superusuario -->
+  {% if user.is_superuser %}
+  <div class="row g-4 mb-4" style="margin-top:.5rem;">
+    <div class="col-6 col-md-3">
+      <div class="stat-card d-flex justify-content-between align-items-start" style="background:linear-gradient(135deg,#0a5c6b,#0e8a9e);">
+        <div>
+          <div class="stat-number">{{ total_pacientes }}</div>
+          <div class="stat-label">Total Pacientes</div>
+        </div>
+        <i class="bi bi-people stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card d-flex justify-content-between align-items-start" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">
+        <div>
+          <div class="stat-number">{{ total_citas }}</div>
+          <div class="stat-label">Total Citas</div>
+        </div>
+        <i class="bi bi-calendar3 stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card d-flex justify-content-between align-items-start" style="background:linear-gradient(135deg,#b45309,#d97706);">
+        <div>
+          <div class="stat-number">{{ citas_pendientes }}</div>
+          <div class="stat-label">Pendientes</div>
+        </div>
+        <i class="bi bi-clock stat-icon"></i>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card d-flex justify-content-between align-items-start" style="background:linear-gradient(135deg,#065f46,#059669);">
+        <div>
+          <div class="stat-number">{{ citas_hoy }}</div>
+          <div class="stat-label">Confirmadas</div>
+        </div>
+        <i class="bi bi-check-circle stat-icon"></i>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ACCESOS RÁPIDOS -->
+  <div class="row g-3 mb-4">
+    <div class="col-12">
+      <h5 style="color:#06323b;font-weight:600;">
+        <i class="bi bi-lightning me-2" style="color:#0e8a9e;"></i>Acciones Rápidas
+      </h5>
+    </div>
+
+    <div class="col-6 col-md-3">
+      <a href="{% url 'clinica:paciente_crear' %}" class="card card-bio p-3 text-decoration-none text-center d-block">
+        <i class="bi bi-person-plus" style="font-size:1.8rem;color:#0a5c6b;"></i>
+        <div class="mt-2 fw-500" style="color:#06323b;font-size:.9rem;">Nuevo Paciente</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'clinica:paciente_lista' %}" class="card card-bio p-3 text-decoration-none text-center d-block">
+        <i class="bi bi-people" style="font-size:1.8rem;color:#b45309;"></i>
+        <div class="mt-2 fw-500" style="color:#06323b;font-size:.9rem;">Ver Pacientes</div>
+      </a>
+    </div>
+    <div class="col-6 col-md-3">
+      <a href="{% url 'clinica:medico_lista' %}" class="card card-bio p-3 text-decoration-none text-center d-block">
+        <i class="bi bi-person-badge" style="font-size:1.8rem;color:#065f46;"></i>
+        <div class="mt-2 fw-500" style="color:#06323b;font-size:.9rem;">Ver Médicos</div>
+      </a>
+    </div>
+
+    <!-- Agendar cita lo ven TODOS -->
+    <div class="col-6 col-md-3">
+      <a href="{% url 'clinica:cita_crear' %}" class="card card-bio p-3 text-decoration-none text-center d-block">
+        <i class="bi bi-calendar-plus" style="font-size:1.8rem;color:#7c3aed;"></i>
+        <div class="mt-2 fw-500" style="color:#06323b;font-size:.9rem;">Agendar Cita</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ÚLTIMAS CITAS: solo superusuario -->
+  <div class="card card-bio">
+    <div class="card-header d-flex justify-content-between align-items-center" style="background:#fff;border-bottom:1px solid #e2e8f0;border-radius:14px 14px 0 0;padding:1rem 1.5rem;">
+      <h6 class="mb-0 fw-600" style="color:#06323b;"><i class="bi bi-calendar3 me-2" style="color:#0e8a9e;"></i>Últimas Citas</h6>
+      <a href="{% url 'clinica:cita_lista' %}" class="btn btn-sm btn-outline-secondary">Ver todas</a>
+    </div>
+    <div class="card-body p-0">
+      {% if ultimas_citas %}
+      <div class="table-responsive">
+        <table class="table table-bio table-hover mb-0">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Médico</th>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cita in ultimas_citas %}
+            <tr>
+              <td>
+                <a href="{% url 'clinica:paciente_detalle' cita.paciente.pk %}" class="text-decoration-none fw-500" style="color:#0a5c6b;">
+                  {{ cita.paciente.nombre_completo }}
+                </a>
+              </td>
+              <td class="text-muted">{{ cita.medico }}</td>
+              <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+              <td>{{ cita.hora|time:"H:i" }}</td>
+              <td>
+                <span class="badge badge-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
+              </td>
+              <td>
+                <a href="{% url 'clinica:cita_detalle' cita.pk %}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-calendar-x" style="font-size:2.5rem;"></i>
+          <p class="mt-2">No hay citas registradas aún.</p>
+          <a href="{% url 'clinica:cita_crear' %}" class="btn btn-bio-primary">Agendar Primera Cita</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

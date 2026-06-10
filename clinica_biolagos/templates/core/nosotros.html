@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Nosotros – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-heart-fill me-3"></i>Quiénes Somos</h1>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white-50">Inicio</a></li><li class="breadcrumb-item active text-white">Nosotros</li></ol></nav>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5 align-items-center mb-5">
+    <div class="col-lg-6">
+      <span style="color:#0e8a9e;font-weight:600;font-size:.9rem;">NUESTRA HISTORIA</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:#06323b;margin:.5rem 0 1rem;">15 años cuidando la salud de Los Penquistas</h2>
+      <p class="text-muted mb-3">Clínica BioLagos nació en 2009 con una clara misión: ofrecer atención médica de calidad a la comunidad de Concepción y la región del Biobio. Desde entonces hemos crecido para convertirnos en un referente de salud en el sur de Chile.</p>
+      <p class="text-muted mb-3">Contamos con más de 30 especialistas, tecnología de última generación y una infraestructura diseñada para el bienestar del paciente.</p>
+      <div class="row g-3 mt-2">
+        <div class="col-6"><div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color:#0e8a9e;font-size:1.2rem;"></i><span class="fw-500">Atención personalizada</span></div></div>
+        <div class="col-6"><div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color:#0e8a9e;font-size:1.2rem;"></i><span>Tecnología de punta</span></div></div>
+        <div class="col-6"><div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color:#0e8a9e;font-size:1.2rem;"></i><span>Urgencias 24/7</span></div></div>
+        <div class="col-6"><div class="d-flex align-items-center gap-2"><i class="bi bi-check-circle-fill" style="color:#0e8a9e;font-size:1.2rem;"></i><span>Convenios Fonasa/Isapre</span></div></div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div style="background:linear-gradient(135deg,#0a5c6b,#0e8a9e);border-radius:20px;padding:3rem;text-align:center;color:#fff;">
+        <div style="font-size:4rem;margin-bottom:1rem;">🏥</div>
+        <h3 style="font-family:'Playfair Display',serif;">Misión</h3>
+        <p style="opacity:.85;">Brindar servicios de salud integrales con excelencia clínica, calidez humana y tecnología avanzada, mejorando la calidad de vida de nuestra comunidad.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mt-2">
+    <div class="col-md-4">
+      <div class="card card-bio p-4 h-100">
+        <div style="font-size:2rem;color:#0a5c6b;margin-bottom:.75rem;">🎯</div>
+        <h5 style="color:#06323b;font-weight:600;">Visión</h5>
+        <p class="text-muted small">Ser la clínica líder en el sur de Chile, reconocida por la excelencia en la atención médica y el compromiso con la salud de la comunidad.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-bio p-4 h-100">
+        <div style="font-size:2rem;color:#0a5c6b;margin-bottom:.75rem;">⭐</div>
+        <h5 style="color:#06323b;font-weight:600;">Valores</h5>
+        <p class="text-muted small">Integridad, empatía, excelencia clínica, trabajo en equipo e innovación continua son los pilares que guían nuestro trabajo diario.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-bio p-4 h-100">
+        <div style="font-size:2rem;color:#0a5c6b;margin-bottom:.75rem;">🤝</div>
+        <h5 style="color:#06323b;font-weight:600;">Compromiso</h5>
+        <p class="text-muted small">Nos comprometemos con cada paciente a brindar una atención oportuna, segura y de la más alta calidad, con respeto y confidencialidad.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }} – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-pencil-square me-3"></i>{{ titulo }}</h1>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-white-50">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'clinica:bloque_lista' %}" class="text-white-50">Bloques Horarios</a></li>
+      <li class="breadcrumb-item active text-white">{{ titulo }}</li>
+    </ol></nav>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-bio p-4">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-500">{{ form.medico.label }} *</label>
+            {{ form.medico }}
+            {% if form.medico.errors %}<div class="text-danger small mt-1">{{ form.medico.errors }}</div>{% endif %}
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-4">
+              <label class="form-label fw-500">{{ form.fecha.label }}</label>
+              {{ form.fecha }}
+              {% if form.fecha.errors %}<div class="text-danger small mt-1">{{ form.fecha.errors }}</div>{% endif %}
+              <div class="form-text">{{ form.fecha.help_text }}</div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-500">{{ form.dia_semana.label }}</label>
+              {{ form.dia_semana }}
+              {% if form.dia_semana.errors %}<div class="text-danger small mt-1">{{ form.dia_semana.errors }}</div>{% endif %}
+              <div class="form-text">{{ form.dia_semana.help_text }}</div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+              <div class="form-check mt-3">
+                {{ form.todos_los_dias }}
+                <label class="form-check-label" for="{{ form.todos_los_dias.id_for_label }}">
+                  {{ form.todos_los_dias.label }}
+                </label>
+                {% if form.todos_los_dias.errors %}<div class="text-danger small mt-1">{{ form.todos_los_dias.errors }}</div>{% endif %}
+                <div class="form-text">{{ form.todos_los_dias.help_text }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-md-6">
+              <label class="form-label fw-500">{{ form.hora_inicio.label }} *</label>
+              {{ form.hora_inicio }}
+              {% if form.hora_inicio.errors %}<div class="text-danger small mt-1">{{ form.hora_inicio.errors }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-500">{{ form.hora_fin.label }} *</label>
+              {{ form.hora_fin }}
+              {% if form.hora_fin.errors %}<div class="text-danger small mt-1">{{ form.hora_fin.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger small py-2">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="d-flex justify-content-between gap-2 pt-2">
+            <a href="{% url 'clinica:bloque_lista' %}" class="btn btn-outline-secondary px-4">
+              <i class="bi bi-arrow-left me-2"></i>Volver
+            </a>
+            <button type="submit" class="btn btn-bio-primary px-5">
+              <i class="bi bi-save me-2"></i>Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

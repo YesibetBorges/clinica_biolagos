@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar Eliminación – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-exclamation-triangle me-3"></i>Confirmar Eliminación</h1>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card card-bio p-4 p-md-5 text-center">
+        <div style="width:80px;height:80px;background:#fff5f5;border-radius:50%;margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;">
+          <i class="bi bi-trash" style="font-size:2rem;color:#ef4444;"></i>
+        </div>
+        <h4 style="color:#06323b;font-weight:600;margin-bottom:.75rem;">¿Estás seguro?</h4>
+        <p class="text-muted mb-1">Vas a eliminar el {{ tipo }}:</p>
+        <div class="p-3 mb-4 rounded" style="background:#fff5f5;border:1px solid #fecaca;">
+          <strong style="color:#b91c1c;">{{ objeto }}</strong>
+        </div>
+        <p class="text-muted small mb-4">Esta acción <strong>no se puede deshacer</strong>. Todos los datos asociados serán eliminados permanentemente.</p>
+        <form method="post" class="d-flex gap-3 justify-content-center">
+          {% csrf_token %}
+          <a href="{% url url_cancelar %}" class="btn btn-outline-secondary px-4">
+            <i class="bi bi-arrow-left me-2"></i>Cancelar
+          </a>
+          <button type="submit" class="btn btn-danger px-4">
+            <i class="bi bi-trash me-2"></i>Sí, eliminar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

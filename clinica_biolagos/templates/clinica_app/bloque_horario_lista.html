@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% block title %}Bloques Horarios – Clínica BioLagos{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h1><i class="bi bi-clock me-3"></i>Bloques Horarios</h1>
+        <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-white-50">Dashboard</a></li>
+          <li class="breadcrumb-item active text-white">Bloques Horarios</li>
+        </ol></nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+
+  {# ── Ayuda contextual ──────────────────────────────────────────────── #}
+  <div class="alert alert-info d-flex gap-2 mb-4" role="alert">
+    <i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i>
+    <div>
+      <strong>Modos de bloque horario:</strong><br>
+      <b>Modo simple (recurrente):</b> deja la <em>Fecha específica</em> vacía y elige un <em>Día de la semana</em>.
+      El bloque se repetirá todas las semanas en ese día.<br>
+      <b>Modo avanzado (opcional):</b> elige una <em>Fecha específica</em> y deja vacío el día de la semana.
+      Ese bloque aplica sólo para esa fecha (tiene prioridad sobre los recurrentes).
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    {# ── Formulario nuevo bloque ─────────────────────────────────────── #}
+    <div class="col-lg-4">
+      <div class="card card-bio p-4">
+        <h5 class="fw-600 mb-3" style="color:var(--bio-primary);">
+          <i class="bi bi-plus-circle me-2"></i>Nuevo Bloque
+        </h5>
+        <form method="post" id="form-bloque">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-500">{{ form.medico.label }} *</label>
+            {{ form.medico }}
+            {% if form.medico.errors %}<div class="text-danger small mt-1">{{ form.medico.errors }}</div>{% endif %}
+          </div>
+
+          <hr class="my-3">
+          <p class="small text-muted mb-2">Configura un bloque de disponibilidad de uno de estos modos:</p>
+          <ul class="small text-muted mb-3">
+            <li><strong>Todos los días</strong>: el bloque se aplica cada día de la semana.</li>
+            <li><strong>Día de la semana</strong>: el bloque se repite semanalmente en ese día.</li>
+            <li><strong>Fecha específica</strong>: el bloque aplica solo en ese día concreto.</li>
+          </ul>
+
+          <div class="mb-3">
+            <label class="form-label fw-500">
+              {{ form.fecha.label }}
+              <span class="badge bg-secondary ms-1 fw-normal" style="font-size:.7rem;">avanzado</span>
+            </label>
+            {{ form.fecha }}
+            <div class="form-text">{{ form.fecha.help_text }}</div>
+            {% if form.fecha.errors %}<div class="text-danger small mt-1">{{ form.fecha.errors }}</div>{% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-500">
+              {{ form.dia_semana.label }}
+              <span class="badge bg-primary ms-1 fw-normal" style="font-size:.7rem;">simple</span>
+            </label>
+            {{ form.dia_semana }}
+            <div class="form-text">{{ form.dia_semana.help_text }}</div>
+            {% if form.dia_semana.errors %}<div class="text-danger small mt-1">{{ form.dia_semana.errors }}</div>{% endif %}
+          </div>
+
+          <div class="form-check mb-3">
+            {{ form.todos_los_dias }}
+            <label class="form-check-label" for="{{ form.todos_los_dias.id_for_label }}">
+              {{ form.todos_los_dias.label }}
+            </label>
+            <div class="form-text">{{ form.todos_los_dias.help_text }}</div>
+            {% if form.todos_los_dias.errors %}<div class="text-danger small mt-1">{{ form.todos_los_dias.errors }}</div>{% endif %}
+          </div>
+
+          <hr class="my-3">
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label class="form-label fw-500">{{ form.hora_inicio.label }} *</label>
+              {{ form.hora_inicio }}
+              {% if form.hora_inicio.errors %}<div class="text-danger small mt-1">{{ form.hora_inicio.errors }}</div>{% endif %}
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-500">{{ form.hora_fin.label }} *</label>
+              {{ form.hora_fin }}
+              {% if form.hora_fin.errors %}<div class="text-danger small mt-1">{{ form.hora_fin.errors }}</div>{% endif %}
+            </div>
+          </div>
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger small py-2">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <button type="submit" class="btn btn-bio-primary w-100">
+            <i class="bi bi-plus-lg me-2"></i>Agregar Bloque
+          </button>
+        </form>
+      </div>
+
+      {# ── Filtro por médico (solo superuser) ──── #}
+      {% if user.is_superuser %}
+      <div class="card card-bio p-3 mt-3">
+        <h6 class="fw-600 mb-2" style="color:var(--bio-primary);">Filtrar por médico</h6>
+        <a href="{% url 'clinica:bloque_lista' %}"
+           class="btn btn-sm w-100 mb-1 {% if not medico_sel %}btn-bio-primary{% else %}btn-outline-secondary{% endif %}">
+          Todos los médicos
+        </a>
+        {% for m in medicos %}
+        <a href="{% url 'clinica:bloque_lista_medico' m.pk %}"
+           class="btn btn-sm w-100 mb-1 text-start {% if medico_sel.pk == m.pk %}btn-bio-primary{% else %}btn-outline-secondary{% endif %}">
+          <i class="bi bi-person me-1"></i> Dr(a). {{ m.nombre_completo }}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Tabla de bloques ────────────────────────────────────────────── #}
+    <div class="col-lg-8">
+      <div class="card card-bio p-4">
+        <h5 class="fw-600 mb-3" style="color:var(--bio-primary);">
+          <i class="bi bi-list-ul me-2"></i>
+          {% if medico_sel %}
+            Bloques de Dr(a). {{ medico_sel.nombre_completo }}
+          {% else %}
+            Todos los bloques horarios
+          {% endif %}
+        </h5>
+
+        {% if bloques %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle small">
+            <thead class="table-light">
+              <tr>
+                {% if not medico_sel %}<th>Médico</th>{% endif %}
+                <th>Tipo</th>
+                <th>Día / Fecha</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Horas disponibles <span class="text-muted">(c/30 min)</span></th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in bloques %}
+              <tr>
+                {% if not medico_sel %}
+                <td class="fw-500">Dr(a). {{ b.medico.nombre_completo }}</td>
+                {% endif %}
+                <td>
+                  {% if b.fecha %}
+                    <span class="badge" style="background:#0a5c6b;">Específico</span>
+                  {% else %}
+                    <span class="badge bg-primary">Recurrente</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if b.fecha %}
+                    {{ b.fecha|date:"d/m/Y" }}<br>
+                    <span class="text-muted">{{ b.fecha|date:"l" }}</span>
+                  {% else %}
+                    {{ b.get_dia_semana_display }}
+                  {% endif %}
+                </td>
+                <td>{{ b.hora_inicio|time:"H:i" }}</td>
+                <td>{{ b.hora_fin|time:"H:i" }}</td>
+                <td>
+                  <div class="d-flex flex-wrap gap-1">
+                    {% for h in b.horas_disponibles %}
+                    <span class="badge"
+                          style="background:var(--bio-light);color:var(--bio-dark);border:1px solid var(--bio-accent);">
+                      {{ h|time:"H:i" }}
+                    </span>
+                    {% endfor %}
+                  </div>
+                </td>
+                <td class="text-end">
+                          {% if user.is_superuser or user_medico and b.medico.pk == user_medico.pk %}
+                  <div class="d-flex justify-content-end gap-2">
+                    <a href="{% url 'clinica:bloque_editar' b.pk %}" class="btn btn-sm btn-outline-secondary" title="Modificar">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post" action="{% url 'clinica:bloque_eliminar' b.pk %}"
+                          onsubmit="return confirm('¿Eliminar este bloque horario?')">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-clock" style="font-size:3rem;opacity:.4;"></i>
+          <p class="mt-3 mb-0">No hay bloques horarios definidos aún.</p>
+          <p class="small">Usa el formulario de la izquierda para agregar uno.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Limpiar el campo opuesto cuando se llena uno
+const fechaInput   = document.querySelector('input[name="fecha"]');
+const diaSemSel    = document.querySelector('select[name="dia_semana"]');
+
+if (fechaInput && diaSemSel) {
+  fechaInput.addEventListener('input', () => {
+    if (fechaInput.value) diaSemSel.value = '';
+  });
+  diaSemSel.addEventListener('change', () => {
+    if (diaSemSel.value !== '') fechaInput.value = '';
+  });
+}
+</script>
+{% endblock %}

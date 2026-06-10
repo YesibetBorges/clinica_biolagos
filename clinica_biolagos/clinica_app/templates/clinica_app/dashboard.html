@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-header mb-4">
+        <div class="container">
+            <h1>Bienvenido, {{ user.get_full_name|default:user.username }}</h1>
+            <p class="lead">Panel de control de Clínica BioLagos</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2>Resumen General</h2>
+            <div class="row">
+                {% if user.is_superuser %}
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-primary d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ total_medicos|default:0 }}</div>
+                            <div class="stat-label">Médicos Registrados</div>
+                        </div>
+                        <i class="bi bi-person-badge stat-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-success d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ total_pacientes|default:0 }}</div>
+                            <div class="stat-label">Pacientes Registrados</div>
+                        </div>
+                        <i class="bi bi-people stat-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-warning d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ total_citas_pendientes|default:0 }}</div>
+                            <div class="stat-label">Citas Pendientes</div>
+                        </div>
+                        <i class="bi bi-calendar-x stat-icon"></i>
+                    </div>
+                </div>
+                {% elif medico_usuario %}
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-info d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ citas_hoy_medico|default:0 }}</div>
+                            <div class="stat-label">Citas para Hoy</div>
+                        </div>
+                        <i class="bi bi-calendar-check stat-icon"></i>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-warning d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ citas_pendientes_medico|default:0 }}</div>
+                            <div class="stat-label">Citas Pendientes</div>
+                        </div>
+                        <i class="bi bi-calendar-x stat-icon"></i>
+                    </div>
+                </div>
+                {% elif paciente_usuario %}
+                <div class="col-md-4 mb-4">
+                    <div class="stat-card bg-primary d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-number">{{ citas_proximas_paciente|default:0 }}</div>
+                            <div class="stat-label">Próximas Citas</div>
+                        </div>
+                        <i class="bi bi-calendar-event stat-icon"></i>
+                    </div>
+                </div>
+                {% else %}
+                <p>No hay datos de resumen disponibles para su rol.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# Sección de Acciones de Gestión (Solo Admin y Médicos) #}
+    {% if user.is_superuser or medico_usuario %}
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <h2 class="mb-3">Acciones de Gestión</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card card-bio h-100 p-4 text-center">
+                        <i class="bi bi-clock-history display-4 text-primary mb-3"></i>
+                        <h5 class="card-title">{% if user.is_superuser %}Bloques Horarios{% else %}Mis Horarios{% endif %}</h5>
+                        <p class="text-muted small">Configura la disponibilidad de citas y los bloques de atención médica.</p>
+                        <a href="{% url 'clinica:bloque_lista' %}" class="btn btn-bio-primary mt-auto">Gestionar Bloques</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

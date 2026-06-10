@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Servicios - Clinica BioLagos{% endblock %}
+
+{% block extra_css %}
+<style>
+  .services-grid {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .service-card {
+    min-height: 100%;
+  }
+  .service-icon {
+    width: 50px;
+    height: 50px;
+    background: #e8f6f8;
+    border-radius: 12px;
+    color: #0a5c6b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    flex-shrink: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1><i class="bi bi-heart-pulse me-3"></i>Nuestros Servicios</h1>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-white-50">Inicio</a></li><li class="breadcrumb-item active text-white">Servicios</li></ol></nav>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <p class="text-muted" style="max-width:600px;margin:0 auto;">Ofrecemos una amplia gama de especialidades medicas con profesionales certificados y equipamiento de ultima generacion.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 justify-content-center">
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-heart-pulse"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Cardiologia</h5></div>
+          <p class="text-muted small mb-0">Ecocardiografia, Holter, prueba de esfuerzo, electrocardiograma y consulta cardiologica especializada.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-activity"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Neurologia</h5></div>
+          <p class="text-muted small mb-0">EEG, electromiografia, evaluacion de cefaleas, epilepsia, ACV y trastornos del sueno.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-person-standing"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Traumatologia</h5></div>
+          <p class="text-muted small mb-0">Cirugia artroscopica, reemplazos articulares, fracturas, ortopedia infantil y deportiva.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-clipboard2-pulse"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Pediatria</h5></div>
+          <p class="text-muted small mb-0">Control del nino sano, inmunizaciones, urgencias pediatricas y seguimiento del desarrollo.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-prescription2"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Laboratorio Clinico</h5></div>
+          <p class="text-muted small mb-0">Hemograma, perfil bioquimico, hormonas y microbiologia. Resultados en linea en 24 horas.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-badge-3d"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Imagenologia</h5></div>
+          <p class="text-muted small mb-0">Radiografia, ecografia, TAC, resonancia magnetica e interpretacion por radiologo especialista.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-clipboard2-heart"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Medicina Interna</h5></div>
+          <p class="text-muted small mb-0">Diabetes, hipertension, enfermedades metabolicas y control de enfermedades cronicas.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-universal-access"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Kinesiologia</h5></div>
+          <p class="text-muted small mb-0">Rehabilitacion muscular, respiratoria, neurologica y deportiva. Terapia fisica y ocupacional.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card-bio service-card p-4">
+          <div class="d-flex align-items-center gap-3 mb-3"><div class="service-icon"><i class="bi bi-hospital"></i></div><h5 class="mb-0" style="color:#0a5c6b;">Urgencias 24/7</h5></div>
+          <p class="text-muted small mb-0">Atencion de urgencias y emergencias las 24 horas. Triaje, estabilizacion y hospitalizacion.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5 p-4 rounded-3" style="background:#e8f6f8;border-left:4px solid #0a5c6b;">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h5 style="color:#06323b;font-weight:600;"><i class="bi bi-shield-check me-2" style="color:#0e8a9e;"></i>Convenios de Salud</h5>
+        <p class="text-muted mb-0">Trabajamos con Fonasa, principales Isapres y convenios empresariales. Consulta por tu cobertura.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'contacto' %}" class="btn btn-bio-primary px-4">Consultar Cobertura</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
