@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Clinica BioLagos
 
 Proyecto Django para la gestion y solicitud de horas medicas de una clinica.
@@ -96,7 +95,3 @@ http://127.0.0.1:8000/
 4. Mostrar login y dashboard.
 5. Comparar roles: superusuario, paciente Yesi y doctor Carlos.
 6. Cerrar con mejoras futuras: notificaciones, historial clinico, pagos o recordatorios.
-=======
-# clinica_biolagos
-Trabajo LPOO2
->>>>>>> 36341c4d1a75b8a366908693f00e8620e58ce1bb
