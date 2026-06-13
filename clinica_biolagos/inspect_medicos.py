@@ -1,5 +1,5 @@
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE','misitio.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'misitio.settings')
 import django
 django.setup()
 from clinica_app.models import Medico

@@ -11,6 +11,7 @@ from .forms import (
     SolicitudHoraForm, BloqueHorarioForm
 )
 from .access import (
+    can_access_bloque,
     can_access_cita,
     can_access_paciente,
     cita_queryset_for_user,

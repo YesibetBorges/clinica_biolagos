@@ -240,7 +240,10 @@ class SolicitudHoraForm(forms.Form):
             try:
                 medico = Medico.objects.get(pk=medico_id, activo=True)
                 from datetime import date
-                fecha = date.fromisoformat(fecha_val)
+                if isinstance(fecha_val, date):
+                    fecha = fecha_val
+                else:
+                    fecha = date.fromisoformat(str(fecha_val))
                 self._actualizar_hora_choices(medico, fecha)
             except (ValueError, Medico.DoesNotExist):
                 self.fields['hora'].choices = [('', '— Seleccione médico y fecha primero —')]

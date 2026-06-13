@@ -7,7 +7,7 @@ import sys
 from datetime import date, time, timedelta
 from decimal import Decimal
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'misitio.settings')
+os.environ['DJANGO_SETTINGS_MODULE'] = 'misitio.settings'
 
 import django
 django.setup()
@@ -60,7 +60,7 @@ def test_validacion_rut():
         return False
     
     # Test válido con K
-    rut_con_k = "12.345.678-K"
+    rut_con_k = "1.234.564-K"
     try:
         validar_rut(rut_con_k)
         print(f"✅ RUT con K aceptado: {rut_con_k} → PASÓ")
@@ -261,7 +261,7 @@ def test_formularios_validacion():
     form_data = {
         'nombre': 'Juan',
         'apellido': 'Pérez',
-        'rut': '15.123.456-7',  # RUT válido
+        'rut': '15.123.456-9',  # RUT válido
         'fecha_nacimiento': '1990-05-15',
         'sexo': 'M',
         'email': 'juan@example.com',
@@ -292,7 +292,7 @@ def test_formularios_validacion():
     form_data = {
         'nombre': 'Carlos',
         'apellido': 'López',
-        'rut': '12.345.678-3',  # RUT válido
+        'rut': '12.345.678-5',  # RUT válido
         'especialidad': especialidad.pk if especialidad else '',
         'email': 'carlos@example.com',
         'telefono': '+56 9 9876 5432',
